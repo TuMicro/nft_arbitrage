@@ -64,27 +64,9 @@ npx hardhat flatten > flattened.sol
 
 ### About the custom hardhat tasks implemented
 
-
-Check all the tasks:
+See all the tasks:
 ```
 npx hardhat
-```
-
-Run some useful ones (careful):
-```
-# if it fails for not approving just try again: (make sure the ERC721holder has the NFT as set up in the task)
-npx hardhat execute_buy --network rinkeby
-
-npx hardhat list_on_opensea --network rinkeby
-
-npx hardhat list_on_looksrare --network rinkeby
-
-# make sure to use the order from the list_on_looksrare task:
-npx hardhat validate_looksrare_signature --network rinkeby
-
-# if it fails for not approving just try again: 
-npx hardhat buy_on_looksrare --network rinkeby
-
 ```
 
 ## Utils
