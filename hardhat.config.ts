@@ -9,6 +9,7 @@ import "hardhat-deploy";
 
 // tasks
 import "./tasks/deployments";
+import { block } from "./test/constants/opensea_signature_testing";
 
 const infuraApiKey: string | undefined = process.env.INFURA_API_KEY;
 if (!infuraApiKey) {
@@ -61,8 +62,8 @@ export function getChainRpcUrl(chain: keyof typeof chainIds): string {
   return jsonRpcUrl;
 }
 
-const forkForTesting: keyof typeof chainIds = 'rinkeby';
-const forkForVerification: keyof typeof chainIds = 'rinkeby';
+const forkForTesting: keyof typeof chainIds = 'mainnet';
+const forkForVerification: keyof typeof chainIds = 'mainnet';
 
 const verificationConfig = getVerificationConfig(forkForVerification);
 if (verificationConfig === null) {
@@ -88,6 +89,7 @@ const config: HardhatUserConfig = {
     hardhat: {
       forking: {
         url: getChainRpcUrl(forkForTesting),
+        blockNumber: block,
       },
       chainId: chainIds[forkForTesting],
     },

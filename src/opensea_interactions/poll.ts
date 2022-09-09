@@ -13,6 +13,7 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { Browser } from "puppeteer";
 import { sleep } from "../utils";
 import { OrdersResponse } from "./api_model_v2/orders";
+import { BigNumber } from "ethers";
 
 puppeteer.use(StealthPlugin())
 
@@ -161,7 +162,12 @@ export class OpenSeaPoller {
 
     const orders = await this.getSignatures(collection_address, offers.map(o => o.tokenId));
 
-    console.log(orders.orders?.map(o => o.protocol_data.signature));
+    console.log(JSON.stringify(orders.orders?.map(o => ({
+      id: BigNumber.from(o.protocol_data.parameters.offer?.[0]?.identifierOrCriteria).toHexString(),
+      signature: o.protocol_data.signature,
+      offerer: o.protocol_data.parameters.offerer,
+      protocol_data: o.protocol_data,
+    }))));
 
     await this.closeBrowser();
   }
