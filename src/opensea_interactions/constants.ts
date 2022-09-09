@@ -1,0 +1,1 @@
+export OPENSEA_BASE_URL = '';

@@ -75,3 +75,10 @@ Showing the commits tree:
 ```
 git log --oneline --graph --decorate --all
 ```
+
+## Acknowledgements
+
+Parts of the code are based on the following repos:
+
+* https://github.com/dcts/opensea-scraper
+

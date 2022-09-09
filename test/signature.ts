@@ -1,7 +1,6 @@
 import { TypedDataDomain, TypedDataField } from "@ethersproject/abstract-signer";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ethers } from "ethers";
-import { keccak256, splitSignature, toUtf8Bytes, _TypedDataEncoder } from "ethers/lib/utils";
+import { keccak256, toUtf8Bytes, _TypedDataEncoder } from "ethers/lib/utils";
 
 export class SignatureUtils {
 
