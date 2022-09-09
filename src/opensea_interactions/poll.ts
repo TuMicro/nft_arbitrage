@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import { AssetContractResponse } from "./api_model_v1/asset_contract_response";
 
 // inspiration from: https://github.com/dcts/opensea-scraper/blob/main/src/functions/offers.js

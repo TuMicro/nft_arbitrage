@@ -1,7 +1,5 @@
-import { BigNumber } from "ethers";
-import { ENS_COLLECTION_MAINNET, OPENSEA_SEAPORT_1_1_MAINNET } from "../../test/constants/addresses";
+import { ENS_COLLECTION_MAINNET } from "../../test/constants/addresses";
 import { ONE_MINUTE_IN_MILLIS } from "../../test/constants/time";
-import { Seaport11__factory } from "../../typechain_types";
 import { OpenSeaPoller } from "./poll";
 
 

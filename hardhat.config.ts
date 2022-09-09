@@ -89,7 +89,7 @@ const config: HardhatUserConfig = {
     hardhat: {
       forking: {
         url: getChainRpcUrl(forkForTesting),
-        blockNumber: block,
+        // blockNumber: block,
       },
       chainId: chainIds[forkForTesting],
     },

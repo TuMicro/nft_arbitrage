@@ -1,8 +1,8 @@
 import fetch from "node-fetch";
 // import * as fetch from "node-fetch";
 // const fetch = require('node-fetch');
-import { BigNumber, Contract, ethers, Signer } from 'ethers';
-import { formatEther, id } from "ethers/lib/utils";
+import { BigNumber } from 'ethers';
+import { formatEther } from "ethers/lib/utils";
 import { readFileSync, writeFileSync } from "node:fs";
 import { Order } from "../model/looksrare_model";
 import { sleep } from "../../utils";

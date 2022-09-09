@@ -6,7 +6,7 @@ import { expect } from "chai";
 import { block, sample_protocol_data } from "../constants/opensea_signature_testing";
 import { BigNumber } from "ethers";
 
-describe.only("OpenSea Transactions", () => {
+describe("OpenSea Buy Transactions", () => {
   it("Must be able to buy an NFT", async () => {
     
     const blockNumber = await ethers.provider.getBlockNumber();
@@ -19,7 +19,7 @@ describe.only("OpenSea Transactions", () => {
     const params = sample_protocol_data.parameters;
 
 
-    // [hardhat required] impersonating airdrop owner to enable claiming
+    // [hardhat required] impersonating
     await network.provider.request({ // network from hardhat
       method: "hardhat_impersonateAccount",
       params: ["0xfBf8de425f5CEC239908Fda8f9De2D94D9718094"],
@@ -28,7 +28,7 @@ describe.only("OpenSea Transactions", () => {
 
     // get sum of considerations with token zero (ETH)
     const sumOfEthConsiderations = params.consideration.reduce((acc, curr) => {
-      return acc.add(curr.token == ZERO_ADDRESS ? curr.startAmount : 0); // TODO: support WETH (or other tokens)
+      return acc.add(curr.token === ZERO_ADDRESS ? curr.startAmount : 0); // TODO: support WETH (or other tokens)
     }, BigNumber.from(0));
 
     const tr = await seaportContract.connect(externalAccount).fulfillBasicOrder({
