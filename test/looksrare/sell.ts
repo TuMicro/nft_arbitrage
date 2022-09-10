@@ -19,6 +19,8 @@ export async function sell(chainId: SupportedChainId, collectionAddress: string,
   const _allBids = spreadInfo.results[0].bidsAsks.allBids;
 
   // filter out orders that are about to expire
+  // NOTE: this is not a good practice, but for demo purposes it's ok
+  // TODO: remove this when implementing a real solution
   const allBids = _allBids.filter((item) => {
     return (item.endTime ?? 0) * 1000 > Date.now() + ONE_MINUTE_IN_MILLIS;
   });
