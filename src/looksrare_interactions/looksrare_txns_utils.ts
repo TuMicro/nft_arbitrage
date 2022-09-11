@@ -130,6 +130,7 @@ export class LooksRareTxnUtils {
     return {
       target: looksRareExchangeContract.address,
       payload: t.data!,
+      populatedTransaction: t,
     }
   }
 }

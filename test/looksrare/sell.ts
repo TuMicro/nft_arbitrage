@@ -1,18 +1,22 @@
 import { addressesByNetwork, SupportedChainId } from "@looksrare/sdk";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BigNumber } from "ethers";
+import { BigNumber, Wallet } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { ethers } from "hardhat";
 import { LooksRareApiClient } from "../../src/external_order_signature/api/looksrare_api";
 import { Order } from "../../src/external_order_signature/model/looksrare_model";
+import { Flashbots } from "../../src/flashbots/Flashbots";
 import { LooksRareTxnUtils, LOOKSRARE_ERC721_TRANSFER_MANAGER_CONTRACT_ETHEREUM } from "../../src/looksrare_interactions/looksrare_txns_utils";
 import { ERC721__factory, LooksRareExchange__factory, Weth9__factory } from "../../typechain_types";
 import { WETH_ADDRESS } from "../constants/addresses";
+import { GWEI } from "../constants/ether";
 import { ONE_MINUTE_IN_MILLIS } from "../constants/time";
 
-export async function sell(chainId: SupportedChainId, collectionAddress: string, 
+const useFlashbots = false;
+
+export async function sell(chainId: SupportedChainId, collectionAddress: string,
   token_id: string, externalAccount: SignerWithAddress) {
-  
+
   const lrc = new LooksRareApiClient(chainId);
   const spreadInfo = await lrc.getSpreadsOfNfts(collectionAddress, [Number(token_id)], false);
 
@@ -44,17 +48,17 @@ export async function sell(chainId: SupportedChainId, collectionAddress: string,
   if (bestBid == null) {
     throw new Error(`No valid bids found for tokenId ${token_id}`);
   }
-  
+
   // console.log(JSON.stringify(bestBid));
 
   const erc721Contract = ERC721__factory.connect(collectionAddress,
     ethers.provider);
 
-  
+
   //await erc721Contract.connect(externalAccount).approve(looksRareExchangeContract.address,
   //  tokenId);
   if (await erc721Contract.connect(externalAccount).isApprovedForAll(externalAccount.address,
-     LOOKSRARE_ERC721_TRANSFER_MANAGER_CONTRACT_ETHEREUM) === false) {
+    LOOKSRARE_ERC721_TRANSFER_MANAGER_CONTRACT_ETHEREUM) === false) {
     console.log("approving looksrare to move our NFTs");
     await erc721Contract.connect(externalAccount).setApprovalForAll(
       LOOKSRARE_ERC721_TRANSFER_MANAGER_CONTRACT_ETHEREUM,
@@ -62,9 +66,8 @@ export async function sell(chainId: SupportedChainId, collectionAddress: string,
     );
   }
 
-  
   const n_nfts = await erc721Contract.balanceOf(externalAccount.address);
-  
+
   console.log("sending the sell txn");
   const sellingFeesOver10k = BigNumber.from(200).add(750); // fees + royalties
   const addresses = addressesByNetwork[chainId];
@@ -76,15 +79,31 @@ export async function sell(chainId: SupportedChainId, collectionAddress: string,
     BigNumber.from(10_000).sub(sellingFeesOver10k), // 1 - slippage
     externalAccount.address, // must be msg.sender
   );
-  await externalAccount.sendTransaction({
-    to: pst.target,
-    data: pst.payload,
-  });
+
+  if (useFlashbots) {
+    const fl = new Flashbots(ethers.provider);
+    const gas = await externalAccount.estimateGas({
+      to: pst.target,
+      data: pst.payload,
+    });
+    await fl.sendRegularTxn(pst.populatedTransaction,
+      (externalAccount as any) as Wallet, // TODO: in production find a way to make sure 
+      // this is a wallet (we can't use hardhat impersonated accounts here)
+      gas.mul(3).div(2), // 1.5 times the estimated gas
+      GWEI.mul(2),
+    );
+  } else {
+    await externalAccount.sendTransaction({
+      to: pst.target,
+      data: pst.payload,
+    });
+  }
+
 
   const n_nfts_2 = await erc721Contract.balanceOf(externalAccount.address);
 
   if (!n_nfts.sub(n_nfts_2).eq(1)) {
-    throw new Error(`sell txn failed`);
+    throw new Error(`sell txn failed, NFT still owned by ${externalAccount.address}`);
   }
 
   console.log("Sell successful! 👌");
