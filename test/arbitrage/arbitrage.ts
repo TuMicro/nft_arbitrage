@@ -5,7 +5,7 @@ import { BAYC_COLLECTION_MAINNET, ZERO_ADDRESS } from "../constants/addresses";
 import { sell } from "../looksrare/sell";
 import { buy } from "../opensea/buy";
 
-export const ETH_HOLDER = '0x02A522D98EC2D2c3bBe91AcC29ee7fD32ab880ab'; // has more than 72 ETH at that block
+export const ETH_HOLDER = '0x02A522D98EC2D2c3bBe91AcC29ee7fD32ab880ab'; // has more than 72 ETH at block 15505947
 
 export async function arbitrage_first_demo() {
 
