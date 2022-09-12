@@ -159,7 +159,8 @@ export class OpenSeaPoller {
     const offers = await this.getFloorTokenIds(slug);
     // console.log(offers);
 
-    const orders = await this.getSignatures(collection_address, offers.map(o => o.tokenId));
+    // getting the listing signatures of the floor NFT:
+    const orders = await this.getSignatures(collection_address, offers.slice(0, 1).map(o => o.tokenId));
 
     // console.log(JSON.stringify(orders.orders?.map(o => ({
     //   id: BigNumber.from(o.protocol_data.parameters.offer?.[0]?.identifierOrCriteria).toHexString(),
