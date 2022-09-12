@@ -19,7 +19,7 @@ What has been built so far:
 * Given an ERC721 collection on the Ethereum mainnet, we get the floor NFT on OpenSea and we buy it, then we sell it on LooksRare to the highest bid.
 * We run this using Hardhat in a local mainnet fork.
 
-[Link to the video demo.]()
+[Link to the video demo.](https://www.youtube.com/watch?v=OxrRwyH3wlA)
 
 # How to run 
 
