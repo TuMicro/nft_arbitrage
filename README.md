@@ -6,7 +6,7 @@ NOTE: This code is not yet ready for production use. It is a work in progress.
 
 This repository aims to poll information from OpenSea and LooksRare (and probably more marketplaces in the future) and execute on arbitrage opportunities.
 
-We will use flashloans to be able to execute on these big opportunities without requiring a large amount of capital.
+We will use flashloans to be able to execute on big opportunities without requiring a large amount of capital.
 
 We will send the transaction with Flashbots to avoid being frontrun (avoid mempool) and to avoid paying gas fees in case of failure.
 
