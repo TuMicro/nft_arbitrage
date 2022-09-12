@@ -1,25 +1,45 @@
 # Description
 
-TODO: add this
+NOTE: This code is not yet ready for production use. It is a work in progress.
 
-# Development
+## Overview
 
-Repo tested using nodejs 16.13.2
+This repository aims to poll information from OpenSea and LooksRare (and probably more marketplaces in the future) and execute on arbitrage opportunities.
 
-Solhint works through vscode even without having it on dependencies. (tested with the Juan Blanco Solidity vscode extension)
+We will use flashloans to be able to execute on these big opportunities without requiring a large amount of capital.
 
-Usage:
+We will send the transaction with Flashbots to avoid being frontrun (avoid mempool) and to avoid paying gas fees in case of failure.
+
+Many of the features implemented (or to be implemented) here are intended to be part of a larger project that we are building on stealth mode for now.
+
+## Summary
+
+What has been built so far:
+
+* Given an ERC721 collection on the Ethereum mainnet, we get the floor NFT on OpenSea and we buy it, then we sell it on LooksRare to the highest bid.
+* We run this using Hardhat in a local mainnet fork.
+
+[Link to the video demo.]()
+
+# How to run 
+
+1. You will need nodejs 16.13.2 (but probably any higher version will work).
+2. Fill in the `.env` file with, preferrably, newly generated keys (you can use https://vanity-eth.tk/ although not recommended for production use) and an infura key. (see `.env.example` for the format). OPENSEA_API_KEY and ETHERSCAN_API_KEY are optional for now.
+3. Run `npm install` to install the dependencies.
+4. Run:
 ```
 npx hardhat compile
+npx hardhat typechain
 npx hardhat test
 ```
 
 ## Notes
 
-* If you change the Order structs don't forget to update its values on the test files and update the scheme hash in solidity. You can get the schemes hashes from the first lines of `npx hardhat test`. Otherwise tests will throw `'Signature: Invalid'`
 * If adding new files to external_abis (or even when changing solidity code) run `npx hardhat typechain` to update the typechain types. If this fails to update types then temporary comment out problematic tasks on the `hardhat.config.ts` file.
+* The recommended IDE is VSCode.
+* Solhint works on VSCode even without having it on dependencies. (tested with the Juan Blanco Solidity vscode extension).
 
-## Deployment
+## Deployment (this part is not ready yet)
 
 Base command: 
 ```

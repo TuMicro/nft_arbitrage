@@ -8,10 +8,11 @@ import { buy } from "../opensea/buy";
 
 export const ETH_HOLDER = '0x02A522D98EC2D2c3bBe91AcC29ee7fD32ab880ab'; // has more than 72 ETH at block 15505947
 
+const collection_address = BAYC_COLLECTION_MAINNET;
+
+
 export async function arbitrage_first_demo() {
   
-  const collection_address = BAYC_COLLECTION_MAINNET;
-
   const osp = new OpenSeaPoller();
   const orders = await osp.getOpenSeaFloorPriceBuyNowOrders(collection_address);
 
@@ -49,8 +50,8 @@ export async function arbitrage_first_demo() {
     externalAccount);
 
   if (received.gt(price)) {
-    console.log(`💰 Arbitrage success! We made ${formatEther(received.sub(price))} ETH`);
+    console.log(`💰 We made ${formatEther(received.sub(price))} ETH`);
   } else {
-    console.log(`💸 Arbitrage failure! We lost ${formatEther(price.sub(received))} ETH`);
+    console.log(`💸 We lost ${formatEther(price.sub(received))} ETH`);
   }
 }
