@@ -1,6 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber } from "ethers";
 import { ProtocolData } from "../../src/opensea_interactions/api_model_v2/orders";
+import { getEthTotalPriceFromOrder } from "../../src/opensea_interactions/util";
 import { Seaport11__factory } from "../../typechain_types";
 import { OPENSEA_SEAPORT_1_1_MAINNET, ZERO_ADDRESS } from "../constants/addresses";
 
@@ -18,9 +19,8 @@ export async function buy(protocolData: ProtocolData, externalAccount: SignerWit
   }
 
   // get sum of considerations with token zero (ETH)
-  const sumOfEthConsiderations = params.consideration.reduce((acc, curr) => {
-    return acc.add(curr.token === ZERO_ADDRESS ? curr.startAmount : 0); // TODO: support WETH (or other tokens)
-  }, BigNumber.from(0));
+  // TODO: support WETH (or other tokens)
+  const sumOfEthConsiderations = getEthTotalPriceFromOrder(params);
 
   const tr = await seaportContract.connect(externalAccount).fulfillBasicOrder({
     considerationToken: params.consideration[0].token,

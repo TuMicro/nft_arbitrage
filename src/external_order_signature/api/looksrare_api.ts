@@ -299,11 +299,11 @@ export class LooksRareApiClient {
           asks: bidsAsks.asks,
           allBids,
         } });
-        if (spreadInfo != null) {
-          console.log(`${tokenId}: ${formatEther(spreadInfo.spread)}`);
-        } else {
-          console.log(`${tokenId}: not buyable or sellable`);
-        }
+        // if (spreadInfo != null) {
+        //   console.log(`${tokenId}: ${formatEther(spreadInfo.spread)}`);
+        // } else {
+        //   console.log(`${tokenId}: not buyable or sellable`);
+        // }
       } catch (e) {
         console.error(e);
       }
@@ -325,11 +325,12 @@ export class LooksRareApiClient {
       }
       return -1;
     });
+
     // show the top 10
-    console.log(JSON.stringify(filteredResults.map(f => ({
-      tokenId: f.tokenId,
-      spread: formatEther(f.spreadInfo?.spread ?? 0),
-    })).slice(0, 10), null, 2));
+    // console.log(JSON.stringify(filteredResults.map(f => ({
+    //   tokenId: f.tokenId,
+    //   spread: formatEther(f.spreadInfo?.spread ?? 0),
+    // })).slice(0, 10), null, 2));
 
     const toRet = {
       collectionAddress,

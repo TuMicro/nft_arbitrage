@@ -37,7 +37,7 @@ export async function sell(chainId: SupportedChainId, collectionAddress: string,
   while (i < allBids.length) {
     const bid = allBids[i];
     const bidderBalance = await wethTokenContract.balanceOf(bid.signer!);
-    console.log(`Bid of ${bid.signer!} of price ${formatEther(bid.price!)} has balance ${formatEther(bidderBalance)}`);
+    console.log(`Bidder ${bid.signer!} bid ${formatEther(bid.price!)} and has a WETH balance of ${formatEther(bidderBalance)}`);
     i++;
     if (bidderBalance.gte(bid.price!)) {
       bestBid = bid;
@@ -59,7 +59,7 @@ export async function sell(chainId: SupportedChainId, collectionAddress: string,
   //  tokenId);
   if (await erc721Contract.connect(externalAccount).isApprovedForAll(externalAccount.address,
     LOOKSRARE_ERC721_TRANSFER_MANAGER_CONTRACT_ETHEREUM) === false) {
-    console.log("approving looksrare to move our NFTs");
+    console.log("Approving looksrare to move our NFTs");
     await erc721Contract.connect(externalAccount).setApprovalForAll(
       LOOKSRARE_ERC721_TRANSFER_MANAGER_CONTRACT_ETHEREUM,
       true
@@ -67,8 +67,12 @@ export async function sell(chainId: SupportedChainId, collectionAddress: string,
   }
 
   const n_nfts = await erc721Contract.balanceOf(externalAccount.address);
+  const prev_weth_balance = await wethTokenContract.balanceOf(externalAccount.address);
 
-  console.log("sending the sell txn");
+  console.log("Sending the sell txn");
+  // TODO: get royalty info from the contract (calculateRoyaltyFeeAndGetRecipient)
+  // and also update it regularly (usually only depends on the collection and usually 
+  // doesn't change)
   const sellingFeesOver10k = BigNumber.from(200).add(750); // fees + royalties
   const addresses = addressesByNetwork[chainId];
   const looksrareExchangeContract = LooksRareExchange__factory.connect(addresses.EXCHANGE, ethers.provider);
@@ -101,10 +105,15 @@ export async function sell(chainId: SupportedChainId, collectionAddress: string,
 
 
   const n_nfts_2 = await erc721Contract.balanceOf(externalAccount.address);
+  const after_weth_balance = await wethTokenContract.balanceOf(externalAccount.address);
 
   if (!n_nfts.sub(n_nfts_2).eq(1)) {
     throw new Error(`sell txn failed, NFT still owned by ${externalAccount.address}`);
   }
 
-  console.log("Sell successful! 👌");
+  const received = after_weth_balance.sub(prev_weth_balance);
+
+  console.log("Sell successful! 👌 for ", formatEther(received), " WETH");
+
+  return received;
 }
