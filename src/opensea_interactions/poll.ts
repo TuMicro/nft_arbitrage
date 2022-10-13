@@ -30,8 +30,7 @@ export class OpenSeaPoller {
     this.browser = this.startBrowser();
   }
 
-
-  // GENERIC HANDLERS
+  // BROWSER LIFECYLE
 
   async startBrowser() {
     return await puppeteer.launch({
@@ -43,6 +42,8 @@ export class OpenSeaPoller {
   async closeBrowser() {
     await (await this.browser).close();
   }
+
+  // GENERIC HANDLERS
 
   async newPage(url: string) {
     const page = await (await this.browser).newPage();
